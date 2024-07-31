@@ -15,5 +15,6 @@ namespace AirlineManagement.Business.Contracts
         Task<IDataResult<CheckInDto>> CreateCheckInAsync(CheckInCreateDto checkInCreateDto);
         Task<IDataResult<CheckInDto>> UpdateCheckInAsync(CheckInUpdateDto checkInUpdateDto);
         Task<IResult> DeleteCheckInAsync(CheckInDeleteDto checkInDeleteDto);
+        Task<IResult> HardDeleteAsync(int checkInId);
     }
 }

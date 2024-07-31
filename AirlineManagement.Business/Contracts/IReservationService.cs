@@ -1,4 +1,5 @@
 ﻿using AirlineManagement.Business.DTOs.ReservationDTOs;
+using AirlineManagement.Domain.Results.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace AirlineManagement.Business.Contracts
         Task<ReservationDto> CreateReservationAsync(ReservationCreateDto reservationCreateDto);
         Task<ReservationDto> UpdateReservationAsync(ReservationUpdateDto reservationUpdateDto);
         Task<bool> DeleteReservationAsync(ReservationDeleteDto reservationDeleteDto);
+        Task<IResult> HardDeleteAsync(int reservationId);
     }
 }

@@ -122,5 +122,10 @@ namespace AirlineManagement.Business.Services
                 return new ErrorResult($"Check-in silinirken bir hata oluştu: {ex.Message}");
             }
         }
+
+        public Task<IResult> HardDeleteAsync(int checkInId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
