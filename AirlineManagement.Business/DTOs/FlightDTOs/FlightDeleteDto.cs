@@ -8,6 +8,7 @@ namespace AirlineManagement.Business.DTOs.FlightDTOs
 {
     public class FlightDeleteDto
     {
-        public int Id { get; set; }
+        public string FlightNumber { get; set; }
+
     }
 }

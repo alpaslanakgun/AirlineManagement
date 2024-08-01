@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AirlineManagement.Business.DTOs.FlightDTOs
 {
-    public class FlightDto
+    public class FlightDto: BaseDto
     {
-        public int Id { get; set; }
+  
         public string FlightNumber { get; set; }
         public string DepartureAirport { get; set; }
         public string ArrivalAirport { get; set; }

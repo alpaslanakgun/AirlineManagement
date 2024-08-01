@@ -11,5 +11,7 @@ namespace AirlineManagement.Domain.Entities
     {
         public string PassengerId { get; set; }
         public string Name { get; set; }
+        public ICollection<Reservation> Reservations { get; set; } 
+
     }
 }

@@ -8,16 +8,19 @@ namespace AirlineManagement.Business.Common.MessageConstant
 {
     public static class Messages
     {
-        public const string CustomerNotFound = "Müşteri bulunamadı.";
-        public const string CustomerDeletionFailed = "Müşteri silme işlemi başarısız oldu.";
-        public const string CustomerUpdateFailed = "Müşteri güncelleme işlemi başarısız oldu.";
-        public const string CustomerSearchFailed = "Müşteri arama işlemi başarısız oldu.";
-        public const string CustomerAlreadyDeleted = "Müşteri zaten silinmiş veya bulunamadı.";
-        public const string NoCustomersFound = "Arama kriterlerine uygun müşteri bulunamadı.";
-        public const string CustomerDeletionSuccessful = "Müşteri silme işlemi başarıyla gerçekleştirildi.";
-        public const string CustomerUpdateSuccessful = "Müşteri güncelleme işlemi başarıyla gerçekleştirildi.";
+        public const string CheckInNotFound = "Check-in bulunamadı.";
+        public const string CheckInDeletionFailed = "Check-in silme işlemi başarısız oldu.";
+        public const string CheckInHardDeletionFailed = "Check-in kalıcı olarak silme işlemi başarısız oldu.";
+        public const string CheckInUpdateFailed = "Check-in güncelleme işlemi başarısız oldu.";
+        public const string CheckInFetchFailed = "Check-in getirme işlemi başarısız oldu.";
+        public const string CheckInCreationFailed = "Check-in oluşturma işlemi başarısız oldu.";
+        public const string CheckInFetchSuccessful = "Check-in başarıyla getirildi.";
+        public const string CheckInCreationSuccessful = "Check-in başarıyla oluşturuldu.";
+        public const string CheckInUpdateSuccessful = "Check-in başarıyla güncellendi.";
+        public const string CheckInDeletionSuccessful = "Check-in başarıyla silindi.";
+        public const string CheckInHardDeletionSuccessful = "Check-in kalıcı olarak başarıyla silindi.";
 
-        
+
         /// <summary>
         ///  Airline Const Message
         /// </summary>
@@ -56,6 +59,28 @@ namespace AirlineManagement.Business.Common.MessageConstant
         public const string ReservationDeletionSuccessful = "Rezervasyon silme işlemi başarıyla gerçekleştirildi.";
         public const string ReservationUpdateSuccessful = "Rezervasyon güncelleme işlemi başarıyla gerçekleştirildi.";
         public const string ReservationSearchSuccessful = "Rezervasyonlar başarıyla alındı.";
+        public const string ReservationCreationSuccessful = "Rezervasyon başarıyla oluşturuldu.";
+        public const string ReservationCreationFailed = "Rezervasyon oluşturma işlemi başarısız oldu.";
+        public const string ReservationHardDeletionSuccessful = "Rezervasyon kalıcı olarak silindi.";
+
+
+        /// <summary>
+        ///  Passenger  Const Message
+        /// </summary>
+        public const string PassengerNotFound = "Yolcu bulunamadı.";
+        public const string PassengerDeletionFailed = "Yolcu silme işlemi başarısız oldu.";
+        public const string PassengerUpdateFailed = "Yolcu güncelleme işlemi başarısız oldu.";
+        public const string PassengerFetchFailed = "Yolcu arama işlemi başarısız oldu.";
+        public const string PassengerAlreadyDeleted = "Yolcu zaten silinmiş veya bulunamadı.";
+        public const string NoPassengersFound = "Arama kriterlerine uygun yolcu bulunamadı.";
+        public const string PassengerDeletionSuccessful = "Yolcu silme işlemi başarıyla gerçekleştirildi.";
+        public const string PassengerUpdateSuccessful = "Yolcu güncelleme işlemi başarıyla gerçekleştirildi.";
+        public const string PassengerFetchSuccessful = "Yolcular başarıyla alındı.";
+        public const string PassengerCreationSuccessful = "Yolcu başarıyla oluşturuldu.";
+        public const string PassengerCreationFailed = "Yolcu oluşturma işlemi başarısız oldu.";
+        public const string PassengerHardDeletionSuccessful = "Yolcu kalıcı olarak silindi.";
+        public const string PassengerHardDeletionFailed = "Yolcu kalıcı olarak silme işlemi başarısız oldu.";
+        public const string PassengerIdMismatch = "Yolcu ID eşleşmesi başarısız oldu.";
 
     }
 }

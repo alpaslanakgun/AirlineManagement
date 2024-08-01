@@ -13,11 +13,18 @@ namespace AirlineManagement.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Aircraft> builder)
         {
+            
             builder.HasKey(x => x.AircraftId);
             builder.Property(x => x.AircraftId).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Model).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Capacity).IsRequired();
             builder.Property(x => x.AirlineId).IsRequired().HasMaxLength(50);
+
+          
+            builder.HasOne(a => a.Airline)
+                   .WithMany(a => a.Aircrafts)
+                   .HasForeignKey(a => a.AirlineId);
+
             builder.ToTable("Aircrafts");
         }
     }

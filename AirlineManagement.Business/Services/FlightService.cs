@@ -1,4 +1,5 @@
-﻿using AirlineManagement.Business.Contracts;
+﻿using AirlineManagement.Business.Common.MessageConstant;
+using AirlineManagement.Business.Contracts;
 using AirlineManagement.Business.DTOs.FlightDTOs;
 using AirlineManagement.Data.Contracts;
 using AirlineManagement.Domain.Entities;
@@ -8,7 +9,6 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AirlineManagement.Business.Services
@@ -26,35 +26,56 @@ namespace AirlineManagement.Business.Services
             _mapper = mapper;
         }
 
+        private async Task<string> GenerateFlightNumber()
+        {
+            var lastFlightNumber = await _flightRepository.GetAllAsync()
+                .ContinueWith(task => task.Result
+                    .OrderByDescending(f => f.FlightNumber)
+                    .Select(f => f.FlightNumber)
+                    .FirstOrDefault());
+
+            if (lastFlightNumber == null)
+            {
+                return "FL001";
+            }
+            else
+            {
+                var prefix = lastFlightNumber.Substring(0, 2);
+                var lastIdNumber = int.Parse(lastFlightNumber.Substring(2));
+                var newIdNumber = lastIdNumber + 1;
+                return $"{prefix}{newIdNumber:D3}";
+            }
+        }
+
         public async Task<IDataResult<IEnumerable<FlightDto>>> GetFlightsAsync()
         {
             try
             {
                 var flights = await _flightRepository.GetAllAsync();
                 var flightDtos = _mapper.Map<IEnumerable<FlightDto>>(flights);
-                return new SuccessDataResult<IEnumerable<FlightDto>>(flightDtos, "Uçuşlar başarıyla alındı.");
+                return new SuccessDataResult<IEnumerable<FlightDto>>(flightDtos, Messages.FlightSearchSuccessful);
             }
             catch (Exception ex)
             {
-                return new ErrorDataResult<IEnumerable<FlightDto>>($"Uçuşlar alınırken bir hata oluştu: {ex.Message}");
+                return new ErrorDataResult<IEnumerable<FlightDto>>($"{Messages.FlightSearchFailed}: {ex.Message}");
             }
         }
 
-        public async Task<IDataResult<FlightDto>> GetFlightDetailsAsync(int flightId)
+        public async Task<IDataResult<FlightDto>> GetFlightDetailsAsync(string flightNumber)
         {
             try
             {
-                var flight = await _flightRepository.GetAsync(f => f.Id == flightId);
+                var flight = await _flightRepository.GetAsync(f => f.FlightNumber == flightNumber);
                 if (flight == null)
                 {
-                    return new ErrorDataResult<FlightDto>("Uçuş bulunamadı.");
+                    return new ErrorDataResult<FlightDto>(Messages.FlightNotFound);
                 }
                 var flightDto = _mapper.Map<FlightDto>(flight);
-                return new SuccessDataResult<FlightDto>(flightDto, "Uçuş detayları başarıyla alındı.");
+                return new SuccessDataResult<FlightDto>(flightDto, Messages.FlightSearchSuccessful);
             }
             catch (Exception ex)
             {
-                return new ErrorDataResult<FlightDto>($"Uçuş detayları alınırken bir hata oluştu: {ex.Message}");
+                return new ErrorDataResult<FlightDto>($"{Messages.FlightSearchFailed}: {ex.Message}");
             }
         }
 
@@ -63,48 +84,45 @@ namespace AirlineManagement.Business.Services
             try
             {
                 var flight = _mapper.Map<Flight>(flightCreateDto);
+                flight.FlightNumber = await GenerateFlightNumber();
+                flight.CreatedDate = DateTime.Now;
+                flight.UpdatedDate = DateTime.Now;
+                flight.IsDeleted = false;
+                flight.IsActive = true;
+
                 await _flightRepository.AddAsync(flight);
                 await _unitOfWork.CommitAsync();
                 var createdFlightDto = _mapper.Map<FlightDto>(flight);
-                return new SuccessDataResult<FlightDto>(createdFlightDto, "Uçuş başarıyla oluşturuldu.");
+                return new SuccessDataResult<FlightDto>(createdFlightDto, Messages.FlightSearchSuccessful);
             }
             catch (Exception ex)
             {
-                return new ErrorDataResult<FlightDto>($"Uçuş oluşturulurken bir hata oluştu: {ex.Message}");
+                return new ErrorDataResult<FlightDto>($"{Messages.FlightSearchFailed}: {ex.Message}");
             }
         }
 
         public async Task<IDataResult<FlightDto>> UpdateFlightAsync(FlightUpdateDto flightUpdateDto)
         {
-            if (_flightRepository == null)
-            {
-                throw new ArgumentNullException(nameof(_flightRepository));
-            }
-
-            if (_mapper == null)
-            {
-                throw new ArgumentNullException(nameof(_mapper));
-            }
-
             try
             {
-                var flight = await _flightRepository.GetAsync(f => f.Id == flightUpdateDto.Id);
+                var flight = await _flightRepository.GetAsync(f => f.FlightNumber == flightUpdateDto.FlightNumber);
 
                 if (flight == null)
                 {
-                    return new ErrorDataResult<FlightDto>("Uçuş bulunamadı.");
+                    return new ErrorDataResult<FlightDto>(Messages.FlightNotFound);
                 }
 
                 _mapper.Map(flightUpdateDto, flight);
+                flight.UpdatedDate = DateTime.Now;
                 await _flightRepository.UpdateAsync(flight);
                 await _unitOfWork.CommitAsync();
 
                 var updatedFlightDto = _mapper.Map<FlightDto>(flight);
-                return new SuccessDataResult<FlightDto>(updatedFlightDto, "Uçuş başarıyla güncellendi.");
+                return new SuccessDataResult<FlightDto>(updatedFlightDto, Messages.FlightUpdateSuccessful);
             }
             catch (Exception ex)
             {
-                return new ErrorDataResult<FlightDto>($"Uçuş güncellenirken bir hata oluştu: {ex.Message}");
+                return new ErrorDataResult<FlightDto>($"{Messages.FlightUpdateFailed}: {ex.Message}");
             }
         }
 
@@ -112,34 +130,84 @@ namespace AirlineManagement.Business.Services
         {
             try
             {
-                var flight = await _flightRepository.GetAsync(f => f.Id == flightDeleteDto.Id);
+                var flight = await _flightRepository.GetAsync(f => f.FlightNumber == flightDeleteDto.FlightNumber);
                 if (flight == null)
                 {
-                    return new ErrorResult("Uçuş bulunamadı.");
+                    return new ErrorResult(Messages.FlightNotFound);
+                }
+
+                flight.IsDeleted = true;
+                flight.UpdatedDate = DateTime.Now;
+                await _flightRepository.UpdateAsync(flight);
+                await _unitOfWork.CommitAsync();
+                return new SuccessResult(Messages.FlightDeletionSuccessful);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorResult($"{Messages.FlightDeletionFailed}: {ex.Message}");
+            }
+        }
+
+        public async Task<IResult> HardDeleteFlightAsync(FlightDeleteDto flightDeleteDto)
+        {
+            try
+            {
+                var flight = await _flightRepository.GetAsync(f => f.FlightNumber == flightDeleteDto.FlightNumber);
+                if (flight == null)
+                {
+                    return new ErrorResult(Messages.FlightNotFound);
                 }
 
                 await _flightRepository.DeleteAsync(flight);
                 await _unitOfWork.CommitAsync();
-                return new SuccessResult("Uçuş başarıyla silindi.");
+                return new SuccessResult(Messages.FlightDeletionSuccessful);
             }
             catch (Exception ex)
             {
-                return new ErrorResult($"Uçuş silinirken bir hata oluştu: {ex.Message}");
+                return new ErrorResult($"{Messages.FlightDeletionFailed}: {ex.Message}");
             }
         }
-        public async Task<IDataResult<IEnumerable<FlightDto>>> SearchFlightsAsync(string search)
+
+        public async Task<IDataResult<IEnumerable<FlightDto>>> SearchFlightsAsync(string departureAirport, string arrivalAirport, DateTime departureDate)
         {
             try
             {
-                var flights = _flightRepository.GetFlightsMatchingSearch(search).ToList();
+                var flights = await _flightRepository.SearchFlightsAsync(departureAirport, arrivalAirport, departureDate);
                 var flightDtos = _mapper.Map<IEnumerable<FlightDto>>(flights);
-                return new SuccessDataResult<IEnumerable<FlightDto>>(flightDtos, "Arama sonuçları başarıyla alındı.");
+                return new SuccessDataResult<IEnumerable<FlightDto>>(flightDtos, Messages.FlightSearchSuccessful);
             }
             catch (Exception ex)
             {
-                return new ErrorDataResult<IEnumerable<FlightDto>>($"Uçuşlar aranırken bir hata oluştu: {ex.Message}");
+                return new ErrorDataResult<IEnumerable<FlightDto>>($"{Messages.FlightSearchFailed}: {ex.Message}");
+            }
+        }
+
+        public async Task<IDataResult<IEnumerable<FlightDto>>> SearchFlightsWithCriteriaAsync(string departureAirport, string arrivalAirport, DateTime? departureDate, string status)
+        {
+            try
+            {
+                var flights = await _flightRepository.SearchFlightsAsync(departureAirport, arrivalAirport, departureDate, status);
+                var flightDtos = _mapper.Map<IEnumerable<FlightDto>>(flights);
+                return new SuccessDataResult<IEnumerable<FlightDto>>(flightDtos, Messages.FlightSearchSuccessful);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorDataResult<IEnumerable<FlightDto>>($"{Messages.FlightSearchFailed}: {ex.Message}");
+            }
+        }
+
+        public async Task<IDataResult<IEnumerable<FlightDto>>> GetFlightsWithDetailsAsync()
+        {
+            try
+            {
+                var flights = await _flightRepository.GetFlightsWithDetailsAsync();
+                var flightDtos = _mapper.Map<IEnumerable<FlightDto>>(flights);
+                return new SuccessDataResult<IEnumerable<FlightDto>>(flightDtos, Messages.FlightSearchSuccessful);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorDataResult<IEnumerable<FlightDto>>($"{Messages.FlightSearchFailed}: {ex.Message}");
             }
         }
     }
 }
-

@@ -1,6 +1,7 @@
 ﻿using AirlineManagement.Business.DTOs.AirlineDTOs;
 using AirlineManagement.Business.DTOs.CheckInDTOs;
 using AirlineManagement.Business.DTOs.FlightDTOs;
+using AirlineManagement.Business.DTOs.PassengerDTOs;
 using AirlineManagement.Business.DTOs.ReservationDTOs;
 using AirlineManagement.Domain.Entities;
 using AutoMapper;
@@ -21,25 +22,31 @@ namespace AirlineManagement.Business.Mappings
             CreateMap<Flight, FlightDto>().ReverseMap();
             CreateMap<Flight, FlightCreateDto>().ReverseMap();
             CreateMap<Flight, FlightUpdateDto>().ReverseMap();
-            CreateMap<Flight, FlightDeleteDto>().ReverseMap();
+ 
 
             // Reservation Mapping
             CreateMap<Reservation, ReservationDto>().ReverseMap();
             CreateMap<Reservation, ReservationCreateDto>().ReverseMap();
             CreateMap<Reservation, ReservationUpdateDto>().ReverseMap();
-            CreateMap<Reservation, ReservationDeleteDto>().ReverseMap();
+            
 
             // CheckIn Mapping
             CreateMap<CheckIn, CheckInDto>().ReverseMap();
             CreateMap<CheckIn, CheckInCreateDto>().ReverseMap();
             CreateMap<CheckIn, CheckInUpdateDto>().ReverseMap();
-            CreateMap<CheckIn, CheckInDeleteDto>().ReverseMap();
 
             // Airline Mapping
             CreateMap<Airline, AirlineDto>().ReverseMap();
             CreateMap<Airline, AirlineCreateDto>().ReverseMap();
             CreateMap<Airline, AirlineUpdateDto>().ReverseMap();
             CreateMap<Airline, AirlineDeleteDto>().ReverseMap();
+
+            // Passenger mapping
+            CreateMap<Passenger, PassengerDto>().ReverseMap();
+            CreateMap<Passenger, PassengerCreateDto>().ReverseMap();
+            CreateMap<Passenger, PassengerUpdateDto>().ReverseMap();
+            CreateMap<Passenger, PassengerDeleteDto>().ReverseMap();
+
         }
     }
 }

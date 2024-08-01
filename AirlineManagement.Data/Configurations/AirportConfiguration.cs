@@ -13,6 +13,7 @@ namespace AirlineManagement.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Airport> builder)
         {
+
             builder.HasKey(x => x.AirportCode);
             builder.Property(x => x.AirportCode).IsRequired().HasMaxLength(10);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);

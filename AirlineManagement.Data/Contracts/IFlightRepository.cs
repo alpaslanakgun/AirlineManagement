@@ -9,6 +9,8 @@ namespace AirlineManagement.Data.Contracts
 {
     public interface IFlightRepository : IGenericRepository<Flight>
     {
-        IQueryable<Flight> GetFlightsMatchingSearch(string search);
+        Task<IEnumerable<Flight>> SearchFlightsAsync(string departureAirport, string arrivalAirport, DateTime departureDate);
+        Task<IEnumerable<Flight>> GetFlightsWithDetailsAsync();
+        Task<IEnumerable<Flight>> SearchFlightsAsync(string departureAirport, string arrivalAirport, DateTime? departureDate, string status);
     }
 }

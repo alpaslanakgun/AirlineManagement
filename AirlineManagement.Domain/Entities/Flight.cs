@@ -16,5 +16,9 @@ namespace AirlineManagement.Domain.Entities
         public DateTime ArrivalTime { get; set; }
         public string AircraftId { get; set; }
         public string Status { get; set; }
+        public Airport DepartureAirportNavigation { get; set; } 
+        public Airport ArrivalAirportNavigation { get; set; } 
+        public Aircraft Aircraft { get; set; } 
+        public ICollection<Reservation> Reservations { get; set; }
     }
 }

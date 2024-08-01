@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace AirlineManagement.Domain.Entities
 {
-    public class CrewMember: IEntity
+    public class CrewMember:BaseEntity, IEntity
     {
         public string MemberId { get; set; }
         public string Name { get; set; }
         public string Role { get; set; }
         public string AirlineId { get; set; }
+        public Airline Airline { get; set; }
     }
 }

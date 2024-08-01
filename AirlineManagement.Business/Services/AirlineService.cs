@@ -1,5 +1,5 @@
 ﻿using AirlineManagement.Business.Common.MessageConstant;
-using AirlineManagement.Business.Constants;
+using AirlineManagement.Business.Contracts;
 using AirlineManagement.Business.DTOs.AirlineDTOs;
 using AirlineManagement.Data.Contracts;
 using AirlineManagement.Domain.Entities;
@@ -24,6 +24,26 @@ namespace AirlineManagement.Business.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        private async Task<string> GenerateAirlineId()
+        {
+            var lastAirlineId = await _airlineRepository.GetAllAsync()
+                .ContinueWith(task => task.Result
+                    .OrderByDescending(a => a.AirlineId)
+                    .Select(a => a.AirlineId)
+                    .FirstOrDefault());
+
+            if (lastAirlineId == null)
+            {
+                return "AL001";
+            }
+            else
+            {
+                var lastIdNumber = int.Parse(lastAirlineId.Substring(2));
+                var newIdNumber = lastIdNumber + 1;
+                return $"AL{newIdNumber:D3}";
+            }
+        }
+
 
         public async Task<IDataResult<IEnumerable<AirlineDto>>> GetAirlinesAsync()
         {
@@ -62,8 +82,15 @@ namespace AirlineManagement.Business.Services
             try
             {
                 var airline = _mapper.Map<Airline>(airlineCreateDto);
+                airline.AirlineId = await GenerateAirlineId();
+                airline.CreatedDate = DateTime.Now;
+                airline.UpdatedDate = DateTime.Now;
+                airline.IsDeleted = false;
+                airline.IsActive = true;
+
                 await _airlineRepository.AddAsync(airline);
                 await _unitOfWork.CommitAsync();
+
                 var createdAirlineDto = _mapper.Map<AirlineDto>(airline);
                 return new SuccessDataResult<AirlineDto>(createdAirlineDto, Messages.AirlineCreatedSuccessfully);
             }
@@ -85,6 +112,7 @@ namespace AirlineManagement.Business.Services
                 }
 
                 _mapper.Map(airlineUpdateDto, airline);
+                airline.UpdatedDate = DateTime.Now;
                 await _airlineRepository.UpdateAsync(airline);
                 await _unitOfWork.CommitAsync();
 
@@ -97,7 +125,30 @@ namespace AirlineManagement.Business.Services
             }
         }
 
+
         public async Task<IResult> DeleteAirlineAsync(AirlineDeleteDto airlineDeleteDto)
+        {
+            try
+            {
+                var airline = await _airlineRepository.GetAsync(a => a.AirlineId == airlineDeleteDto.AirlineId);
+                if (airline == null)
+                {
+                    return new ErrorResult(Messages.AirlineNotFound);
+                }
+
+                airline.IsDeleted = true;
+                airline.UpdatedDate = DateTime.Now;
+                await _airlineRepository.UpdateAsync(airline);
+                await _unitOfWork.CommitAsync();
+                return new SuccessResult(Messages.AirlineDeletedSuccessfully);
+            }
+            catch (Exception ex)
+            {
+                return new ErrorResult($"{Messages.AirlineDeletionFailed}: {ex.Message}");
+            }
+        }
+
+        public async Task<IResult> HardDeleteAirlineAsync(AirlineDeleteDto airlineDeleteDto)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirlineManagement.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace AirlineManagement.Business.DTOs.ReservationDTOs
 {
-    public class ReservationCreateDto
+    public class ReservationCreateDto: BaseDto
     {
-        public int FlightId { get; set; }
-        public string PassengerName { get; set; }
-        public DateTime ReservationDate { get; set; }
+        public string PassengerId { get; set; }
+        public string FlightNumber { get; set; }
+        public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
         public string Seat { get; set; }
-        public string Status { get; set; }
     }
 }

@@ -1,36 +1,86 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
+using AirlineManagement.Business.Mappings;
+using AirlineManagement.Business.Validations;
+using AirlineManagement.Presentation;
 
-namespace AirlineManagement.Presentation
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<AirlineValidator>();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddMemoryCache();
+
+var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
+builder.Services.AddServiceRegistration(connectionString);
+
+builder.Services.AddCors(option =>
 {
-    public class Program
+    option.AddDefaultPolicy(policy =>
     {
-        public static void Main(string[] args)
+        policy.WithOrigins("https://localhost:7280/", "https://localhost:7280/").AllowAnyHeader()
+            .AllowCredentials()
+            .AllowAnyOrigin();
+    });
+});
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt")
+    .WriteTo.MSSqlServer(
+        connectionString: connectionString,
+        sinkOptions: new MSSqlServerSinkOptions
         {
-            var builder = WebApplication.CreateBuilder(args);
+            TableName = "Logs",
+            AutoCreateSqlTable = true
+        },
+        columnOptions: new ColumnOptions(),
+        restrictedToMinimumLevel: LogEventLevel.Information
+    )
+    .CreateLogger();
 
-            // Add services to the container.
+builder.Host.UseSerilog();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+var app = builder.Build();
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

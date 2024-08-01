@@ -1,11 +1,13 @@
-﻿namespace AirlineManagement.Business.DTOs.CheckInDTOs
+﻿using AirlineManagement.Domain.Enums;
+
+namespace AirlineManagement.Business.DTOs.CheckInDTOs
 {
-    public class CheckInUpdateDto
+    public class CheckInUpdateDto: BaseDto
     {
-        public int Id { get; set; }
-        public int ReservationId { get; set; }
-        public DateTime CheckInTime { get; set; }
-        public string Status { get; set; }
+        public string CheckInId { get; set; }
+        public string ReservationId { get; set; }
+        public CheckInStatus? Status { get; set; } 
         public int BaggageCount { get; set; }
+        public DateTime BoardingTime { get; set; }
     }
 }

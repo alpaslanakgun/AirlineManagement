@@ -8,6 +8,7 @@ namespace AirlineManagement.Business.DTOs.ReservationDTOs
 {
     public class ReservationDeleteDto
     {
-        public int Id { get; set; }
+        public string ReservationId { get; set; }
+
     }
 }

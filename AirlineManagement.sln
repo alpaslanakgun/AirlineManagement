@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagement.Presentation", "AirlineManagement.Presentation\AirlineManagement.Presentation.csproj", "{F4E768D1-3D64-4232-8EA7-27EE362EE643}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineManagement.Presentation", "AirlineManagement.Presentation\AirlineManagement.Presentation.csproj", "{F4E768D1-3D64-4232-8EA7-27EE362EE643}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagement.Business", "AirlineManagement.Business\AirlineManagement.Business.csproj", "{DD783DF0-788A-41B6-BAC3-7C17E8246E36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineManagement.Business", "AirlineManagement.Business\AirlineManagement.Business.csproj", "{DD783DF0-788A-41B6-BAC3-7C17E8246E36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagement.Data", "AirlineManagement.Data\AirlineManagement.Data.csproj", "{45F76F39-DE15-4188-9529-4072A6F76F1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineManagement.Data", "AirlineManagement.Data\AirlineManagement.Data.csproj", "{45F76F39-DE15-4188-9529-4072A6F76F1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagement.Domain", "AirlineManagement.Domain\AirlineManagement.Domain.csproj", "{13259099-EFDA-427B-AF26-9196F0D3C129}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineManagement.Domain", "AirlineManagement.Domain\AirlineManagement.Domain.csproj", "{13259099-EFDA-427B-AF26-9196F0D3C129}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagement.UI", "AirlineManagement.UI\AirlineManagement.UI.csproj", "{58BF9E37-036A-44B7-B7FE-D078C6A708E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagement.UnitTest", "AirlineManagement.UnitTest\AirlineManagement.UnitTest.csproj", "{AD80D067-DF42-4A8F-88C3-143BCFDB116F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{13259099-EFDA-427B-AF26-9196F0D3C129}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13259099-EFDA-427B-AF26-9196F0D3C129}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13259099-EFDA-427B-AF26-9196F0D3C129}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58BF9E37-036A-44B7-B7FE-D078C6A708E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58BF9E37-036A-44B7-B7FE-D078C6A708E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58BF9E37-036A-44B7-B7FE-D078C6A708E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58BF9E37-036A-44B7-B7FE-D078C6A708E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD80D067-DF42-4A8F-88C3-143BCFDB116F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD80D067-DF42-4A8F-88C3-143BCFDB116F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD80D067-DF42-4A8F-88C3-143BCFDB116F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD80D067-DF42-4A8F-88C3-143BCFDB116F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

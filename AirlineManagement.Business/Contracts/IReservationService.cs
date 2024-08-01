@@ -10,11 +10,11 @@ namespace AirlineManagement.Business.Contracts
 {
     public interface IReservationService
     {
-        Task<IEnumerable<ReservationDto>> GetReservationsAsync();
-        Task<ReservationDto> GetReservationDetailsAsync(int reservationId);
-        Task<ReservationDto> CreateReservationAsync(ReservationCreateDto reservationCreateDto);
-        Task<ReservationDto> UpdateReservationAsync(ReservationUpdateDto reservationUpdateDto);
-        Task<bool> DeleteReservationAsync(ReservationDeleteDto reservationDeleteDto);
-        Task<IResult> HardDeleteAsync(int reservationId);
+        Task<IDataResult<IEnumerable<ReservationDto>>> GetReservationsAsync();
+        Task<IDataResult<ReservationDto>> GetReservationDetailsAsync(string reservationId);
+        Task<IDataResult<ReservationDto>> CreateReservationAsync(ReservationCreateDto reservationCreateDto);
+        Task<IDataResult<ReservationDto>> UpdateReservationAsync(ReservationUpdateDto reservationUpdateDto);
+        Task<IResult> DeleteReservationAsync(ReservationDeleteDto reservationDeleteDto);
+        Task<IResult> HardDeleteReservationAsync(ReservationDeleteDto reservationDeleteDto);
     }
 }

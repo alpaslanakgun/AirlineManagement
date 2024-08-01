@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagement.Data.Contracts
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
         Task CommitAsync();
         void Commit();

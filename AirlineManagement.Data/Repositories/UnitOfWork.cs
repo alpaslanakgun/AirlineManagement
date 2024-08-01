@@ -1,5 +1,9 @@
 ﻿using AirlineManagement.Data.Context;
 using AirlineManagement.Data.Contracts;
+using AirlineManagement.Data.Repositories;
+using AirlineManagement.Domain.Results.Abstract;
+using AirlineManagement.Domain.Results.ComplexType;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +29,12 @@ namespace AirlineManagement.Data.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }
+
+
+

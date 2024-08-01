@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagement.Business.DTOs.FlightDTOs
 {
-    public class FlightCreateDto
+    public class FlightCreateDto:BaseDto
     {
         public string FlightNumber { get; set; }
         public string DepartureAirport { get; set; }

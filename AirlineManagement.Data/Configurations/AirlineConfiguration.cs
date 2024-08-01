@@ -13,10 +13,15 @@ namespace AirlineManagement.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Airline> builder)
         {
+         
             builder.HasKey(x => x.AirlineId);
             builder.Property(x => x.AirlineId).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Country).IsRequired().HasMaxLength(50);
+            builder.Property(x => x.CreatedDate).IsRequired().HasColumnType("datetime");
+            builder.Property(x => x.UpdatedDate).IsRequired().HasColumnType("datetime");
+            builder.Property(x => x.IsDeleted).IsRequired();
+            builder.Property(x => x.IsActive).IsRequired();
             builder.ToTable("Airlines");
         }
     }

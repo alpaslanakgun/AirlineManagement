@@ -1,4 +1,5 @@
 ﻿using AirlineManagement.Domain.Common;
+using AirlineManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,9 @@ namespace AirlineManagement.Domain.Entities
     {
         public string CheckInId { get; set; }
         public string ReservationId { get; set; }
-        public string Status { get; set; }
+        public CheckInStatus Status { get; set; }
         public int BaggageCount { get; set; }
         public DateTime BoardingTime { get; set; }
+        public Reservation Reservation { get; set; }
     }
 }

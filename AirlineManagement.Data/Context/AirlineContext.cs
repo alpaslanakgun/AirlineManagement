@@ -1,8 +1,8 @@
 ﻿using AirlineManagement.Domain.Common;
 using AirlineManagement.Domain.Entities;
+using AirlineManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-
 
 namespace AirlineManagement.Data.Context
 {
@@ -17,7 +17,6 @@ namespace AirlineManagement.Data.Context
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<CheckIn> CheckIns { get; set; }
 
-
         public AirlineContext(DbContextOptions<AirlineContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,10 +24,11 @@ namespace AirlineManagement.Data.Context
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
 
-          
+            var currentDate = DateTime.Now;
+
             modelBuilder.Entity<Airline>().HasData(
-                new Airline { AirlineId = "AL001", Name = "Global Air", Country = "USA" },
-                new Airline { AirlineId = "AL002", Name = "Skyways", Country = "UK" }
+                new Airline { AirlineId = "AL001", Name = "Global Air", Country = "USA", CreatedDate = currentDate, UpdatedDate = currentDate, IsDeleted = false, IsActive = true },
+                new Airline { AirlineId = "AL002", Name = "Skyways", Country = "UK", CreatedDate = currentDate, UpdatedDate = currentDate, IsDeleted = false, IsActive = true }
             );
 
             modelBuilder.Entity<Airport>().HasData(
@@ -55,7 +55,11 @@ namespace AirlineManagement.Data.Context
                     DepartureTime = new DateTime(2024, 4, 1, 14, 0, 0),
                     ArrivalTime = new DateTime(2024, 4, 1, 20, 0, 0),
                     AircraftId = "AC001",
-                    Status = "Scheduled"
+                    Status = "Scheduled",
+                    CreatedDate = currentDate,
+                    UpdatedDate = currentDate,
+                    IsDeleted = false,
+                    IsActive = true
                 },
                 new Flight
                 {
@@ -65,29 +69,77 @@ namespace AirlineManagement.Data.Context
                     DepartureTime = new DateTime(2024, 4, 2, 9, 0, 0),
                     ArrivalTime = new DateTime(2024, 4, 2, 15, 0, 0),
                     AircraftId = "AC002",
-                    Status = "Scheduled"
+                    Status = "Scheduled",
+                    CreatedDate = currentDate,
+                    UpdatedDate = currentDate,
+                    IsDeleted = false,
+                    IsActive = true
                 }
             );
 
             modelBuilder.Entity<Passenger>().HasData(
-                new Passenger { PassengerId = "P001", Name = "Alice Smith" },
-                new Passenger { PassengerId = "P002", Name = "Bob Johnson" }
+                new Passenger { PassengerId = "P001", Name = "Alice Smith", CreatedDate = currentDate, UpdatedDate = currentDate, IsDeleted = false, IsActive = true },
+                new Passenger { PassengerId = "P002", Name = "Bob Johnson", CreatedDate = currentDate, UpdatedDate = currentDate, IsDeleted = false, IsActive = true }
             );
 
             modelBuilder.Entity<Reservation>().HasData(
-                new Reservation { ReservationId = "R001", PassengerId = "P001", FlightNumber = "GA100", Status = "Confirmed", Seat = "12A" },
-                new Reservation { ReservationId = "R002", PassengerId = "P002", FlightNumber = "SW200", Status = "Confirmed", Seat = "6B" }
+                new Reservation
+                {
+                    ReservationId = "R001",
+                    PassengerId = "P001",
+                    FlightNumber = "GA100",
+                    Status = ReservationStatus.Confirmed,
+                    Seat = "12A",
+                    CreatedDate = currentDate,
+                    UpdatedDate = currentDate,
+                    IsDeleted = false,
+                    IsActive = true
+                },
+                new Reservation
+                {
+                    ReservationId = "R002",
+                    PassengerId = "P002",
+                    FlightNumber = "SW200",
+                    Status = ReservationStatus.Confirmed, 
+                    Seat = "6B",
+                    CreatedDate = currentDate,
+                    UpdatedDate = currentDate,
+                    IsDeleted = false,
+                    IsActive = true
+                }
             );
 
             modelBuilder.Entity<CheckIn>().HasData(
-                new CheckIn { CheckInId = "CI001", ReservationId = "R001", Status = "Completed", BaggageCount = 2, BoardingTime = new DateTime(2024, 4, 1, 13, 0, 0) },
-                new CheckIn { CheckInId = "CI002", ReservationId = "R002", Status = "Completed", BaggageCount = 1, BoardingTime = new DateTime(2024, 4, 2, 8, 0, 0) }
+                new CheckIn
+                {
+                    CheckInId = "CI001",
+                    ReservationId = "R001",
+                    Status = CheckInStatus.Completed, 
+                    BaggageCount = 2,
+                    BoardingTime = new DateTime(2024, 4, 1, 13, 0, 0),
+                    CreatedDate = currentDate,
+                    UpdatedDate = currentDate,
+                    IsDeleted = false,
+                    IsActive = true
+                },
+                new CheckIn
+                {
+                    CheckInId = "CI002",
+                    ReservationId = "R002",
+                    Status = CheckInStatus.Completed,
+                    BaggageCount = 1,
+                    BoardingTime = new DateTime(2024, 4, 2, 8, 0, 0),
+                    CreatedDate = currentDate,
+                    UpdatedDate = currentDate,
+                    IsDeleted = false,
+                    IsActive = true
+                }
             );
         }
 
         public override int SaveChanges()
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
 
             foreach (var entry in ChangeTracker.Entries()
                          .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
@@ -109,7 +161,7 @@ namespace AirlineManagement.Data.Context
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var modifiedEntries = ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Modified)
                 .ToList();
@@ -140,4 +192,3 @@ namespace AirlineManagement.Data.Context
         }
     }
 }
-

@@ -8,7 +8,7 @@ namespace AirlineManagement.Business.DTOs
 {
     public  class BaseDto
     {
-        public int Id { get; set; }
+
         public DateTime CreatedDate { get; set; }
         public virtual DateTime UpdatedDate { get; set; }
         public bool IsDeleted { get; set; }

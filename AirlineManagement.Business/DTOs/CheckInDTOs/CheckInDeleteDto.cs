@@ -1,7 +1,13 @@
-﻿namespace AirlineManagement.Business.DTOs.CheckInDTOs
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AirlineManagement.Business.DTOs.CheckInDTOs
 {
-    public class CheckInDeleteDto
+    public  class CheckInDeleteDto
     {
-        public int Id { get; set; }
+        public string CheckInId { get; set; }
     }
 }

@@ -16,19 +16,49 @@ namespace AirlineManagement.Data.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-
-        public IQueryable<Flight> GetFlightsMatchingSearch(string search)
+        public async Task<IEnumerable<Flight>> SearchFlightsAsync(string departureAirport, string arrivalAirport, DateTime departureDate)
         {
-            if (string.IsNullOrWhiteSpace(search))
+            return await _dbContext.Flights
+                .Where(f => f.DepartureAirport == departureAirport &&
+                            f.ArrivalAirport == arrivalAirport &&
+                            f.DepartureTime.Date == departureDate.Date)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Flight>> GetFlightsWithDetailsAsync()
+        {
+            return await _dbContext.Flights
+                .Include(f => f.DepartureAirportNavigation)
+                .Include(f => f.ArrivalAirportNavigation)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Flight>> SearchFlightsAsync(string departureAirport, string arrivalAirport, DateTime? departureDate, string status)
+        {
+            var query = _dbContext.Flights.AsQueryable();
+
+            if (!string.IsNullOrEmpty(departureAirport))
             {
-                throw new ArgumentException("Search term must be provided.", nameof(search));
+                query = query.Where(f => f.DepartureAirport == departureAirport);
             }
 
-            return _dbContext.Flights.Where(f =>
-               f.FlightNumber.Contains(search) ||
-               f.DepartureAirport.Contains(search) ||
-               f.ArrivalAirport.Contains(search) ||
-               f.AircraftId.Contains(search));
+            if (!string.IsNullOrEmpty(arrivalAirport))
+            {
+                query = query.Where(f => f.ArrivalAirport == arrivalAirport);
+            }
+
+            if (departureDate.HasValue)
+            {
+                query = query.Where(f => f.DepartureTime.Date == departureDate.Value.Date);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(f => f.Status == status);
+            }
+
+            return await query.AsNoTracking().ToListAsync();
         }
     }
 }

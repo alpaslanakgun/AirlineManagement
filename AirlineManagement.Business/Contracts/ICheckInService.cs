@@ -11,10 +11,10 @@ namespace AirlineManagement.Business.Contracts
     public interface ICheckInService
     {
         Task<IDataResult<IEnumerable<CheckInDto>>> GetCheckInsAsync();
-        Task<IDataResult<CheckInDto>> GetCheckInDetailsAsync(int checkInId);
+        Task<IDataResult<CheckInDto>> GetCheckInDetailsAsync(string checkInId);
         Task<IDataResult<CheckInDto>> CreateCheckInAsync(CheckInCreateDto checkInCreateDto);
         Task<IDataResult<CheckInDto>> UpdateCheckInAsync(CheckInUpdateDto checkInUpdateDto);
         Task<IResult> DeleteCheckInAsync(CheckInDeleteDto checkInDeleteDto);
-        Task<IResult> HardDeleteAsync(int checkInId);
+        Task<IResult> HardDeleteCheckInAsync(CheckInDeleteDto checkInDeleteDto);
     }
 }

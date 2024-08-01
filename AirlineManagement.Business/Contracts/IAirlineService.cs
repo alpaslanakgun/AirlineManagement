@@ -10,5 +10,7 @@ namespace AirlineManagement.Business.Services
         Task<IDataResult<AirlineDto>> CreateAirlineAsync(AirlineCreateDto airlineCreateDto);
         Task<IDataResult<AirlineDto>> UpdateAirlineAsync(AirlineUpdateDto airlineUpdateDto);
         Task<IResult> DeleteAirlineAsync(AirlineDeleteDto airlineDeleteDto);
+        Task<IResult> HardDeleteAirlineAsync(AirlineDeleteDto airlineDeleteDto);
+
     }
 }

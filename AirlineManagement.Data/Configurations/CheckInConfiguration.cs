@@ -1,11 +1,6 @@
 ﻿using AirlineManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AirlineManagement.Data.Configurations
 {
@@ -13,12 +8,24 @@ namespace AirlineManagement.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<CheckIn> builder)
         {
+        
             builder.HasKey(x => x.CheckInId);
             builder.Property(x => x.CheckInId).IsRequired().HasMaxLength(50);
             builder.Property(x => x.ReservationId).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Status).IsRequired().HasMaxLength(50);
             builder.Property(x => x.BaggageCount).IsRequired();
             builder.Property(x => x.BoardingTime).IsRequired().HasColumnType("datetime");
+
+            builder.Property(x => x.CreatedDate).IsRequired().HasColumnType("datetime");
+            builder.Property(x => x.UpdatedDate).IsRequired().HasColumnType("datetime");
+            builder.Property(x => x.IsDeleted).IsRequired();
+            builder.Property(x => x.IsActive).IsRequired();
+
+            builder.HasOne(c => c.Reservation)
+                   .WithMany(r => r.CheckIns)
+                   .HasForeignKey(c => c.ReservationId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
             builder.ToTable("CheckIns");
         }
     }

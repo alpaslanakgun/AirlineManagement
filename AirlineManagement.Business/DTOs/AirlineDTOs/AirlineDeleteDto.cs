@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagement.Business.DTOs.AirlineDTOs
 {
-    public class AirlineDeleteDto
+    public class AirlineDeleteDto: BaseDto
     {
         public string AirlineId { get; set; }
     }
