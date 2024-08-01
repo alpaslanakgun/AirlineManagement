@@ -38,7 +38,7 @@ namespace AirlineManagement.UnitTest
         [Test]
         public async Task GetCheckInsAsync_ShouldReturnCheckIns_WhenCheckInsExist()
         {
-            // Arrange
+          
             var checkIns = new List<CheckIn>
             {
                 new CheckIn { CheckInId = "CI001", ReservationId = "R001", Status = CheckInStatus.Completed, BaggageCount = 2, BoardingTime = DateTime.Now }
@@ -51,10 +51,10 @@ namespace AirlineManagement.UnitTest
             _checkInRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<CheckIn, bool>>>())).ReturnsAsync(checkIns);
             _mapperMock.Setup(m => m.Map<IEnumerable<CheckInDto>>(It.IsAny<IEnumerable<CheckIn>>())).Returns(checkInDtos);
 
-            // Act
+       
             var result = await _checkInService.GetCheckInsAsync();
 
-            // Assert
+           
             Assert.IsInstanceOf<SuccessDataResult<IEnumerable<CheckInDto>>>(result);
             Assert.AreEqual(checkInDtos, result.Data);
         }
@@ -62,7 +62,7 @@ namespace AirlineManagement.UnitTest
         [Test]
         public async Task GetCheckInDetailsAsync_ShouldReturnCheckIn_WhenCheckInExists()
         {
-            // Arrange
+         
             var checkInId = "CI001";
             var checkIn = new CheckIn { CheckInId = checkInId, ReservationId = "R001", Status = CheckInStatus.Completed, BaggageCount = 2, BoardingTime = DateTime.Now };
             var checkInDto = new CheckInDto { CheckInId = checkInId, ReservationId = "R001", Status = CheckInStatus.Completed, BaggageCount = 2, BoardingTime = DateTime.Now };
@@ -70,10 +70,8 @@ namespace AirlineManagement.UnitTest
             _checkInRepositoryMock.Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<CheckIn, bool>>>())).ReturnsAsync(checkIn);
             _mapperMock.Setup(m => m.Map<CheckInDto>(It.IsAny<CheckIn>())).Returns(checkInDto);
 
-            // Act
             var result = await _checkInService.GetCheckInDetailsAsync(checkInId);
 
-            // Assert
             Assert.IsInstanceOf<SuccessDataResult<CheckInDto>>(result);
             Assert.AreEqual(checkInDto, result.Data);
         }
@@ -81,13 +79,12 @@ namespace AirlineManagement.UnitTest
         [Test]
         public async Task CreateCheckInAsync_ShouldReturnSuccess_WhenCheckInIsCreated()
         {
-            // Arrange
+           
             var checkInCreateDto = new CheckInCreateDto { ReservationId = "R001", BaggageCount = 2 };
             var reservation = new Reservation { ReservationId = "R001", Seat = "12A" };
             var checkIn = new CheckIn { CheckInId = "CI001", ReservationId = "R001", Status = CheckInStatus.InProgress, BaggageCount = 2, BoardingTime = DateTime.Now };
             var checkInDto = new CheckInDto { CheckInId = "CI001", ReservationId = "R001", Status = CheckInStatus.Completed, BaggageCount = 2, BoardingTime = DateTime.Now };
 
-            // Mock setup
             _reservationRepositoryMock.Setup(repo => repo.GetAsync(It.IsAny<Expression<Func<Reservation, bool>>>())).ReturnsAsync(reservation);
             _mapperMock.Setup(m => m.Map<CheckIn>(It.IsAny<CheckInCreateDto>())).Returns(checkIn);
             _checkInRepositoryMock.Setup(repo => repo.GetAllAsync(It.IsAny<Expression<Func<CheckIn, bool>>>())).ReturnsAsync(new List<CheckIn> { checkIn });
@@ -96,17 +93,17 @@ namespace AirlineManagement.UnitTest
             _checkInRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<CheckIn>())).Returns(Task.FromResult((CheckIn)null));
             _mapperMock.Setup(m => m.Map<CheckInDto>(It.IsAny<CheckIn>())).Returns(checkInDto);
 
-            // Act
+           
             var result = await _checkInService.CreateCheckInAsync(checkInCreateDto);
 
-            // Assert
+           
             Assert.IsInstanceOf<SuccessDataResult<CheckInDto>>(result);
             Assert.AreEqual(checkInDto, result.Data);
         }
         [Test]
         public async Task UpdateCheckInAsync_ShouldReturnSuccess_WhenCheckInIsUpdated()
         {
-            // Arrange
+            
             var checkInUpdateDto = new CheckInUpdateDto { CheckInId = "CI001", BaggageCount = 2, Status = CheckInStatus.Completed };
             var checkIn = new CheckIn { CheckInId = "CI001", ReservationId = "R001", Status = CheckInStatus.InProgress, BaggageCount = 2, BoardingTime = DateTime.Now };
             var checkInDto = new CheckInDto { CheckInId = "CI001", ReservationId = "R001", Status = CheckInStatus.Completed, BaggageCount = 2, BoardingTime = DateTime.Now };
@@ -116,10 +113,10 @@ namespace AirlineManagement.UnitTest
             _unitOfWorkMock.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
             _mapperMock.Setup(m => m.Map<CheckInDto>(It.IsAny<CheckIn>())).Returns(checkInDto);
 
-            // Act
+           
             var result = await _checkInService.UpdateCheckInAsync(checkInUpdateDto);
 
-            // Assert
+         
             Assert.IsInstanceOf<SuccessDataResult<CheckInDto>>(result);
             Assert.AreEqual(checkInDto, result.Data);
         }
@@ -127,7 +124,7 @@ namespace AirlineManagement.UnitTest
         [Test]
         public async Task DeleteCheckInAsync_ShouldReturnSuccess_WhenCheckInIsDeleted()
         {
-            // Arrange
+           
             var checkInId = "CI001";
             var checkIn = new CheckIn { CheckInId = checkInId, ReservationId = "R001", Status = CheckInStatus.Completed, BaggageCount = 2, BoardingTime = DateTime.Now };
 
@@ -135,10 +132,8 @@ namespace AirlineManagement.UnitTest
             _checkInRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<CheckIn>())).Returns(Task.FromResult(checkIn));
             _unitOfWorkMock.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
 
-            // Act
             var result = await _checkInService.DeleteCheckInAsync(new CheckInDeleteDto { CheckInId = checkInId });
 
-            // Assert
             Assert.IsInstanceOf<SuccessResult>(result);
         }
     }
