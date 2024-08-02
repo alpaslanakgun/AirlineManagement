@@ -1,18 +1,20 @@
 ﻿using AirlineManagement.Business.Contracts;
 using AirlineManagement.Business.Services;
+using AirlineManagement.Data.Configurations.DatabaseConfigurations;
 using AirlineManagement.Data.Context;
 using AirlineManagement.Data.Contracts;
 using AirlineManagement.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace AirlineManagement.Presentation
 {
     public static class ServiceRegistration
     {
-        public static void AddServiceRegistration(this IServiceCollection services, string connectionString)
+        public static void AddServiceRegistration(this IServiceCollection services)
         {
-            services.AddDbContext<AirlineContext>(options => options.UseSqlServer(connectionString));
-
+            services.AddDbContext<AirlineContext>(options => options.UseSqlServer(Configuration.ConnectionString));
+    
             // Repository registrations
             services.AddScoped<IAirlineRepository, AirlineRepository>();
             services.AddScoped<IFlightRepository, FlightRepository>();

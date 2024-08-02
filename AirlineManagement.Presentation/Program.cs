@@ -7,6 +7,7 @@ using Serilog.Sinks.MSSqlServer;
 using AirlineManagement.Business.Mappings;
 using AirlineManagement.Business.Validations;
 using AirlineManagement.Presentation;
+using AirlineManagement.Data.Configurations.DatabaseConfigurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +30,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMemoryCache();
 
-var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
-builder.Services.AddServiceRegistration(connectionString);
+builder.Services.AddServiceRegistration();
 
 builder.Services.AddCors(option =>
 {
@@ -53,7 +53,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/log.txt")
     .WriteTo.MSSqlServer(
-        connectionString: connectionString,
+        connectionString: builder.Configuration.GetConnectionString("SqlConnection"),
         sinkOptions: new MSSqlServerSinkOptions
         {
             TableName = "Logs",
